@@ -4,13 +4,23 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * Defines a parser class that takes in a file and a sequence length to return. 
+ * @author Jake Andrews and Devan Craig
+ *
+ */
 public class Parser {
 	String line = null;
 	BufferedReader in;
 	int position;
 	int seqLength;
 	String sequence;
-
+	
+	/**
+	 * Constructor class for the parser. 
+	 * @param file - the gbk file you are going to parse from. 
+	 * @param k - the length of subsequences you are looking for. 
+	 */
 	public Parser(String file, int k) {
 		File file2 = new File("C:\\Users\\JakeA\\git\\ClassProject-Bioinformatics\\test1.gbk"); // change to wherever
 																								// your file is
@@ -60,7 +70,10 @@ public class Parser {
 		}
 
 	}
-
+	/**
+	 * Gets the next subsequence of length k in the file string. 
+	 * @return - a long with the binary string of data
+	 */
 	public Long nextSubSeq() { 
 		String sequenceString = "";
 		long seq;
