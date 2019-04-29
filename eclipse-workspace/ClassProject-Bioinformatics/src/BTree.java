@@ -1,5 +1,10 @@
 import java.io.File;
 
+/**
+ * Class to represent a BTree
+ * @author Jake Andrews and Devan Craig
+ *
+ */
 public class BTree {
 	private int degree, numNodes, suqLength;
 	private BTreeNode current, root, next;
