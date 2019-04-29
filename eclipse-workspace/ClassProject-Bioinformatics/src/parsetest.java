@@ -9,6 +9,6 @@ public class parsetest {
 			String q = Long.toBinaryString(parse.nextSubSeq());
 			System.out.print(q + " ");
 		}
-	}
+	} 
 
 }

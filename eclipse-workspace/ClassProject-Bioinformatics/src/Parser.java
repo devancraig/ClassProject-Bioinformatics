@@ -61,7 +61,7 @@ public class Parser {
 
 	}
 
-	public Long nextSubSeq() {
+	public Long nextSubSeq() { 
 		String sequenceString = "";
 		long seq;
 
