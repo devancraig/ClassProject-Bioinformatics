@@ -5,7 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
- * Defines a parser class that takes in a file and a sequence length to return. 
+ * Defines a parser class that takes in a file and a sequence length to return.
+ * 
  * @author Jake Andrews and Devan Craig
  *
  */
@@ -15,27 +16,25 @@ public class Parser {
 	int position;
 	int seqLength;
 	String sequence;
-	
+
 	/**
-	 * Constructor class for the parser. 
-	 * @param file - the gbk file you are going to parse from. 
-	 * @param k - the length of subsequences you are looking for. 
+	 * Constructor class for the parser.
+	 * 
+	 * @param file - the gbk file you are going to parse from.
+	 * @param k    - the length of subsequences you are looking for.
 	 */
 	public Parser(String file, int k) {
-		File file2 = new File("C:\\Users\\JakeA\\git\\ClassProject-Bioinformatics\\test1.gbk"); // change to wherever
-																								// your file is
 		FileReader reader = null;
 		seqLength = k;
 		position = 0;
 
 		try {
-			reader = new FileReader(file2);
+			reader = new FileReader(file);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		in = new BufferedReader(reader);
 		int charPos = 0;
-
 		sequence = "";
 
 		try {
@@ -70,22 +69,34 @@ public class Parser {
 		}
 
 	}
+
 	/**
-	 * Gets the next subsequence of length k in the file string. 
+	 * Gets the next subsequence of length k in the file string.
+	 * 
 	 * @return - a long with the binary string of data
 	 */
-	public Long nextSubSeq() { 
+	public Long nextSubSeq() {
 		String sequenceString = "";
 		long seq;
 
 		for (int i = 0; i < seqLength * 2; i++) {
-
-			sequenceString += sequence.charAt(position+i);
+			
+			sequenceString += sequence.charAt(position + i);
+			
 		}
 		position += 2;
 
 		seq = Long.parseLong(sequenceString, 2);
 		return seq;
+	}
+	
+	/**
+	 * Returns the size of the sequence. 
+	 * @return
+	 */
+	public int size()
+	{
+		return sequence.length();
 	}
 
 }
