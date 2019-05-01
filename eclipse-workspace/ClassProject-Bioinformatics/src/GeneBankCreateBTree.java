@@ -1,3 +1,8 @@
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
 /**
  * Creates a BTree from the gene bank files.
  * 
@@ -16,12 +21,10 @@ public class GeneBankCreateBTree {
 	 */
 	public static void main(String[] args) {
 		try {
-			if (args.length < 3 || args.length > 5)
-			{
+			if (args.length < 3 || args.length > 5) {
 				Usage();
 			}
-			if (args.length == 5)
-			{
+			if (args.length == 5) {
 				debug = true;
 				debugLevel = Integer.parseInt(args[4]);
 			}
@@ -32,7 +35,7 @@ public class GeneBankCreateBTree {
 			degree = Integer.parseInt(args[1]);
 			file = args[2];
 			seqLength = Integer.parseInt(args[3]);
-		    fileDataName = file + ".btree.data." + seqLength + "." + degree;
+			fileDataName = file + ".btree.data." + seqLength + "." + degree;
 			if (seqLength > 31 || seqLength < 1) {
 				System.err.println("Sequence Size must be between 1 and 31 inclusive.");
 				Usage();
@@ -42,24 +45,29 @@ public class GeneBankCreateBTree {
 		}
 		if (!debug || debugLevel == 0) {
 			Parser parse = new Parser(file, seqLength);
-			BTree tree = new BTree(degree, fileDataName, seqLength);
-			
-			for (int i = 0; i < 1000; i++)
-			{
+			BTree tree = new BTree(degree, fileDataName);
+			System.out.println(parse.size());
+			while (parse.hasNext()) {
 				Long seq = parse.nextSubSeq();
 				tree.insert(seq);
 			}
-			tree.inOrderPrint(tree.getRoot());
-		} else if (debugLevel == 1)
-		{
+		} else if (debugLevel == 1) {
 			Parser parse = new Parser(file, seqLength);
-			BTree tree = new BTree(degree, fileDataName, seqLength);
-			
-			for (int i = 0; i < 100; i++)
-			{
-				tree.insert(parse.nextSubSeq());
+			BTree tree = new BTree(degree, fileDataName);
+
+			while (parse.hasNext()) {
+				Long seq = parse.nextSubSeq();
+				tree.insert(seq);
 			}
-			
+			PrintStream dumpFile = null;
+			try {
+				dumpFile = new PrintStream(new FileOutputStream("dump"));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			System.setOut(dumpFile);
+			tree.inOrderPrint(tree.getRoot());
+			System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
 		}
 
 	}

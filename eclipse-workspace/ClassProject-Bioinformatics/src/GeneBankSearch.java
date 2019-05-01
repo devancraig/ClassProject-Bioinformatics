@@ -1,19 +1,19 @@
-
-import java.io.File;
-import java.util.Scanner;
-
 /**
- * A class to search the BTree for sequences of given length. 
+ * A class to search the BTree for sequences of given length.
  * 
  * @author Jake Andrews and Devan Craig
  *
  */
 public class GeneBankSearch {
-	private static int cacheYN, seqLength, debugLevel;
+	private static int cacheYN, debugLevel;
 	private static String file, bTreeFile;
-	private static int cacheSize = 0;
 	private static boolean debug = false;
 
+	/**
+	 * Main method for the GeneBankSearch. See usage() for usage.
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		try {
 			if (args.length < 3 || args.length > 4) {
@@ -35,9 +35,9 @@ public class GeneBankSearch {
 		if (!debug || debugLevel == 0) {
 
 			int degree = Integer.parseInt(bTreeFile.substring(bTreeFile.length() - 1));
-			int seqLength = Integer.parseInt(bTreeFile.substring(bTreeFile.length() - 3, bTreeFile.length() - 2));
+			int seqLength = Integer.parseInt(bTreeFile.substring(bTreeFile.length() - 2, bTreeFile.length() - 1));
 			Parser parse = new Parser(file, seqLength);
-			BTree tree = new BTree(degree, bTreeFile, seqLength);
+			BTree tree = new BTree(degree, bTreeFile);
 
 			tree.search(tree.getRoot(), parse.nextSubSeq());
 

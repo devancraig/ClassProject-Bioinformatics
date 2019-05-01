@@ -98,5 +98,14 @@ public class Parser {
 	{
 		return sequence.length();
 	}
+	
+	public boolean hasNext()
+	{
+		if (position < sequence.length()- seqLength*2)
+		{
+			return true;
+		}
+		return false;
+	}
 
 }

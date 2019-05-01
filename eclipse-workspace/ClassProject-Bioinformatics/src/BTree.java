@@ -10,18 +10,19 @@ public class BTree {
 	private int currentOffset;
 	private int nodeSize;
 	private int insertPoint;
-	private int maxChild;
-	private static int seqLength;
-//	public final int STARTING_ADDRESS = 32;
 
 	private File binFile;
 	private RandomAccessFile disk;
 
-	public BTree(int degree, String file, int seqSize) {
+	/**
+	 * Constructor of the BTree
+	 * 
+	 * @param degree - degree of the BTree
+	 * @param file   - the file to be written to.
+	 */
+
+	public BTree(int degree, String file) {
 		this.degree = degree;
-		//maxChild = 2 * degree;
-		//maxKeys = (2 * degree) - 1;
-		seqLength = seqSize;
 
 		nodeSize = (32 * degree - 3);
 		currentOffset = 12;
@@ -48,19 +49,11 @@ public class BTree {
 
 	}
 
-	public BTree(int degree, File file) {
-		try {
-			disk = new RandomAccessFile(file, "r");
-		} catch (FileNotFoundException ee) {
-			System.err.println("file is missing!");
-		}
-
-	}
-
-	public BTree() {
-		super();
-	}
-
+	/**
+	 * Returns the root of the BTree
+	 * 
+	 * @return
+	 */
 	public BTreeNode getRoot() {
 		return root;
 	}
@@ -118,6 +111,12 @@ public class BTree {
 		}
 	}
 
+	/**
+	 * Inserts a value when the node is not full.
+	 * 
+	 * @param start
+	 * @param key
+	 */
 	public void BTreeInsertNotFull(BTreeNode start, long key) {
 		int i = start.getNumKeys();
 
@@ -153,7 +152,6 @@ public class BTree {
 				}
 				if (j > 0 && object.compareTo(c.getKey(j - 1)) == 0) {
 					c.getKey(j - 1).increaseFreq();
-					// wrtieNode(c,c.getOff)
 					return;
 				} else {
 					splitChild(start, i, c);
@@ -169,6 +167,13 @@ public class BTree {
 		}
 	}
 
+	/**
+	 * Splits the child node according to BTree logic.
+	 * 
+	 * @param start
+	 * @param i
+	 * @param c
+	 */
 	public void splitChild(BTreeNode start, int i, BTreeNode c) {
 		BTreeNode d = new BTreeNode();
 		d.setLeaf(c.isLeaf());
@@ -204,6 +209,13 @@ public class BTree {
 		}
 	}
 
+	/**
+	 * Searches for a specific TreeObject containing a specified key.
+	 * 
+	 * @param start
+	 * @param key
+	 * @return
+	 */
 	public TreeObject search(BTreeNode start, long key) {
 		int i = 0;
 		TreeObject obj = new TreeObject(key);
@@ -222,8 +234,12 @@ public class BTree {
 		}
 	}
 
+	/**
+	 * Prints the keys using an in order traversal.
+	 * 
+	 * @param node
+	 */
 	public void inOrderPrint(BTreeNode node) {
-		System.out.println(node);
 		if (node.isLeaf() == true) {
 			for (int i = 0; i < node.getNumKeys(); i++) {
 				System.out.println(node.getKey(i));
@@ -236,27 +252,17 @@ public class BTree {
 			inOrderPrint(y);
 			if (i < node.getNumKeys())
 				System.out.println(node.getKey(i));
+
 		}
+
 	}
 
-//	public void inOrderPrintToWriter(BTreeNode node, PrintWriter PWriter, int sequenceLength) throws IOException {
-//        GeneBankConvert gbc = new GeneBankConvert();
-//        for (int i = 0; i < node.getNumKeys(); i++){
-//            PWriter.print(node.getKey(i).getFreq()+ " ");
-//            PWriter.println(gbc.convertLongToString(node.getKey(i).getData(),sequenceLength));
-//        } if (!node.isLeaf()) {
-//	        for (int i = 0; i < node.getNumKeys() + 1; ++i) {
-//	            int offset = node.getChild(i);
-//	            BTreeNode y = readNode(offset);
-//	            inOrderPrintToWriter(y,PWriter,sequenceLength);
-//	            if (i < node.getNumKeys()) {
-//	                PWriter.print(node.getKey(i).getFreq() + " ");
-//                    PWriter.println(gbc.convertLongToString(node.getKey(i).getData(),sequenceLength));
-//	            }
-//	        }
-//        }
-//}
-
+	/**
+	 * Writes a node to the disk.
+	 * 
+	 * @param nd
+	 * @param off
+	 */
 	public void writeNode(BTreeNode nd, int off) {
 		int i = 0;
 		try {
@@ -286,6 +292,9 @@ public class BTree {
 		}
 	}
 
+	/**
+	 * Writes tree data to the disk.
+	 */
 	public void writeTreeData() {
 		try {
 			disk.seek(0);
@@ -298,6 +307,12 @@ public class BTree {
 		}
 	}
 
+	/**
+	 * Writes node data to the disk.
+	 * 
+	 * @param start
+	 * @param off
+	 */
 	public void writeNodeData(BTreeNode start, int off) {
 		try {
 			disk.seek(off);
@@ -309,6 +324,12 @@ public class BTree {
 		}
 	}
 
+	/**
+	 * Reads a node for the data it holds.
+	 * 
+	 * @param off
+	 * @return
+	 */
 	public BTreeNode readNode(int off) {
 		BTreeNode n = null;
 
@@ -350,6 +371,9 @@ public class BTree {
 		return n;
 	}
 
+	/**
+	 * Reads the specific node data from the disk.
+	 */
 	public void readNodeData() {
 		try {
 			disk.seek(0);
@@ -362,13 +386,4 @@ public class BTree {
 			System.exit(-1);
 		}
 	}
-
-	/**
-	 * Returns a string representation of the BTree. //We might not need this idk
-	 */
-	public String Convert() {
-
-		return "";
-	}
-
 }
