@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
@@ -38,11 +40,13 @@ public class GeneBankSearch {
 			Usage();
 			System.exit(-1);
 		}
-		scan = new Scanner(file);
+		try {
+			scan = new Scanner(new File(file));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		if (!debug || debugLevel == 0) {
 			String bTreeArgs[] = bTreeFile.split("\\.");
-			System.out.println(bTreeFile);
-			System.out.println(bTreeArgs.length);
 			String gbkFile = bTreeArgs[0] + ".gbk";
 			int seqLength = Integer.parseInt(bTreeArgs[4]);
 			int degree = Integer.parseInt(bTreeArgs[5]);
@@ -53,10 +57,12 @@ public class GeneBankSearch {
 				tree.insert(seq);
 			}
 			while (scan.hasNextLine()) {
-			String line = scan.nextLine();
-			System.out.println(line + ": " + tree.search(tree.getRoot(), queryScanNextLine(line)).getFreq());
+				String line = scan.nextLine().toLowerCase();
+				TreeObject obj = tree.search(tree.getRoot(), queryScanNextLine(line));
+				if (obj != null) {
+					System.out.println(line + ": " + obj.getFreq());
+				}
 			}
-
 		} else if (debugLevel == 1) {
 			Usage();
 			System.exit(-1);
@@ -71,29 +77,34 @@ public class GeneBankSearch {
 		System.err.println(
 				"Usage: java GeneBankSearch <0/1(no/with Cache)> <btree file> <query file> [<debug-level must be 0>]");
 	}
-	
-	public static long queryScanNextLine(String line)
-	{
 
-			String sequence = "";
-			int charPos = 0;
-			while (charPos < line.length()) {
-				char c = line.charAt(charPos++);
+	/**
+	 * Reads the query file line and returns it as a long.
+	 * 
+	 * @param line - the line of the file.
+	 * @return
+	 */
+	public static long queryScanNextLine(String line) {
 
-				if (c == 'a') {
-					sequence += "00";
-				}
-				if (c == 't') {
-					sequence += "11";
-				}
-				if (c == 'c') {
-					sequence += "01";
-				}
-				if (c == 'g') {
-					sequence += "10";
-				}
+		String sequence = "";
+		int charPos = 0;
+		while (charPos < line.length()) {
+			char c = line.charAt(charPos++);
+
+			if (c == 'a') {
+				sequence += "00";
 			}
-			charPos = 0;
-			return Long.parseLong(sequence, 2);
+			if (c == 't') {
+				sequence += "11";
+			}
+			if (c == 'c') {
+				sequence += "01";
+			}
+			if (c == 'g') {
+				sequence += "10";
+			}
+		}
+		charPos = 0;
+		return Long.parseLong(sequence, 2);
 	}
 }

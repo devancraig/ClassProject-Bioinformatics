@@ -17,8 +17,9 @@ public class BTree {
 	/**
 	 * Constructor of the BTree
 	 * 
-	 * @param degree - degree of the BTree
-	 * @param file   - the file to be written to.
+	 * @param degree    - degree of the BTree
+	 * @param file      - the file to be written to.
+	 * @param seqLength - the length of the DNA sequence
 	 */
 
 	public BTree(int degree, String file, int seqLength) {
@@ -27,7 +28,6 @@ public class BTree {
 		nodeSize = (32 * degree - 3);
 		currentOffset = 12;
 		insertPoint = (currentOffset + nodeSize);
-
 		BTreeNode temp = new BTreeNode();
 		root = temp;
 		root.setOffset(currentOffset);
@@ -234,6 +234,12 @@ public class BTree {
 		}
 	}
 
+	/**
+	 * Converts a given long back into a DNA string.
+	 * 
+	 * @param key
+	 * @return
+	 */
 	public String convertToDNA(long key) {
 		String binKey = Long.toBinaryString(key);
 		String str = "";
@@ -274,33 +280,6 @@ public class BTree {
 			inOrderPrint(y);
 			if (i < node.getNumKeys())
 				System.out.println(convertToDNA(node.getKey(i).getKey()) + ": " + node.getKey(i).getFreq());
-
-		}
-
-	}
-
-	/**
-	 * Prints the keys using an in order traversal.
-	 * 
-	 * @param node
-	 */
-	public void inOrderQueryPrint(BTreeNode node) {
-		if (node.isLeaf() == true) {
-			for (int i = 0; i < node.getNumKeys(); i++) {
-				if (node.getKey(i).getFreq() != 0) {
-					System.out.println(convertToDNA(node.getKey(i).getKey()) + ": " + node.getKey(i).getFreq());
-				}
-			}
-			return;
-		}
-		for (int i = 0; i < node.getNumKeys() + 1; ++i) {
-			int offset = node.getChild(i);
-			BTreeNode y = readNode(offset);
-			inOrderPrint(y);
-			if (i < node.getNumKeys())
-				if (node.getKey(i).getFreq() != 0) {
-					System.out.println(convertToDNA(node.getKey(i).getKey()) + ": " + node.getKey(i).getFreq());
-				}
 
 		}
 
@@ -420,19 +399,4 @@ public class BTree {
 		return n;
 	}
 
-	/**
-	 * Reads the specific node data from the disk.
-	 */
-	public void readNodeData() {
-		try {
-			disk.seek(0);
-			degree = disk.readInt();
-			nodeSize = disk.readInt();
-			currentOffset = disk.readInt();
-
-		} catch (IOException ioe) {
-			System.err.println("IOException!");
-			System.exit(-1);
-		}
-	}
 }
