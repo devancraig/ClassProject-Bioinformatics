@@ -72,12 +72,6 @@ public class TreeObject {
 			return 0;
 	}
 
-	/**
-	 * Creates a readable string giving the frequency of each key.
-	 */
-	public String toString() {
-		return "Frequency: " + freq + " Key: " + key;
 
-	}
 
 }

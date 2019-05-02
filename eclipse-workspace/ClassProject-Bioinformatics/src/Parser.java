@@ -53,7 +53,7 @@ public class Parser {
 							if (c == 'c') {
 								sequence += "01";
 							}
-							if (c == 'q') {
+							if (c == 'g') {
 								sequence += "10";
 							}
 						}

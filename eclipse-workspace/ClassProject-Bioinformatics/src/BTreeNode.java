@@ -175,23 +175,6 @@ public class BTreeNode implements Comparable<BTreeNode> {
 	public int getParent() {
 		return parent;
 	}
-	/**
-	 * Makes a readable string explaining a node in the tree. 
-	 */
-	public String toString() {						//not used anymore, can delete
-		StringBuilder s = new StringBuilder();
-		s.append("Keys: ");
-	//	int counter = 0;
-//		for (int i = 0; i < numKeys; i++) {
-//			if (counter % 4 == 0) {
-//				s.append("\n");
-//				String str = keys.get(i).toString();
-//				s.append(str);
-//			}
-//			counter++;
-		//}
-		return s.toString();
-	}
 	
 	@Override
 	public int compareTo(BTreeNode o) {

@@ -23,6 +23,7 @@ public class GeneBankCreateBTree {
 		try {
 			if (args.length < 3 || args.length > 5) {
 				Usage();
+				System.exit(-1);
 			}
 			if (args.length == 5) {
 				debug = true;
@@ -31,29 +32,35 @@ public class GeneBankCreateBTree {
 			cacheYN = Integer.parseInt(args[0]);
 			if (!(cacheYN == 0 || cacheYN == 1)) {
 				Usage();
+				System.exit(-1);
 			}
 			degree = Integer.parseInt(args[1]);
+				if (degree == 0)
+				{
+					degree = 15; //optimal degree
+				}
 			file = args[2];
 			seqLength = Integer.parseInt(args[3]);
 			fileDataName = file + ".btree.data." + seqLength + "." + degree;
 			if (seqLength > 31 || seqLength < 1) {
 				System.err.println("Sequence Size must be between 1 and 31 inclusive.");
 				Usage();
+				System.exit(-1);
 			}
 		} catch (Exception e) {
 			Usage();
+			System.exit(-1);
 		}
 		if (!debug || debugLevel == 0) {
 			Parser parse = new Parser(file, seqLength);
-			BTree tree = new BTree(degree, fileDataName);
-			System.out.println(parse.size());
+			BTree tree = new BTree(degree, fileDataName, seqLength);
 			while (parse.hasNext()) {
 				Long seq = parse.nextSubSeq();
 				tree.insert(seq);
 			}
 		} else if (debugLevel == 1) {
 			Parser parse = new Parser(file, seqLength);
-			BTree tree = new BTree(degree, fileDataName);
+			BTree tree = new BTree(degree, fileDataName, seqLength);
 
 			while (parse.hasNext()) {
 				Long seq = parse.nextSubSeq();
@@ -61,7 +68,8 @@ public class GeneBankCreateBTree {
 			}
 			PrintStream dumpFile = null;
 			try {
-				dumpFile = new PrintStream(new FileOutputStream("dump"));
+				String str = file + ".btree.dump." + seqLength;
+				dumpFile = new PrintStream(new FileOutputStream(str));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -79,5 +87,8 @@ public class GeneBankCreateBTree {
 		System.err.println("Usage: java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence"
 				+ "length> [<debug-level>]");
 	}
+	
+
+	
 
 }

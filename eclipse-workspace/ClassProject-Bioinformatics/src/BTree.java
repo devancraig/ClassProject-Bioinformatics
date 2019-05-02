@@ -10,7 +10,7 @@ public class BTree {
 	private int currentOffset;
 	private int nodeSize;
 	private int insertPoint;
-
+	private int seqLength;
 	private File binFile;
 	private RandomAccessFile disk;
 
@@ -21,9 +21,9 @@ public class BTree {
 	 * @param file   - the file to be written to.
 	 */
 
-	public BTree(int degree, String file) {
+	public BTree(int degree, String file, int seqLength) {
 		this.degree = degree;
-
+		this.seqLength = seqLength;
 		nodeSize = (32 * degree - 3);
 		currentOffset = 12;
 		insertPoint = (currentOffset + nodeSize);
@@ -234,6 +234,28 @@ public class BTree {
 		}
 	}
 
+	public String convertToDNA(long key) {
+		String binKey = Long.toBinaryString(key);
+		String str = "";
+		String ret = "";
+		for (int i = 0; i < (seqLength * 2) - (binKey.length()); i++) {
+			str += "0";
+		}
+		str += binKey;
+		for (int i = 0; i <= str.length() - 2; i += 2) {
+			if (str.substring(i, i + 2).equals("00")) {
+				ret += "a";
+			} else if (str.substring(i, i + 2).equals("01")) {
+				ret += "c";
+			} else if (str.substring(i, i + 2).equals("11")) {
+				ret += "t";
+			} else if (str.substring(i, i + 2).equals("10")) {
+				ret += "g";
+			}
+		}
+		return ret;
+	}
+
 	/**
 	 * Prints the keys using an in order traversal.
 	 * 
@@ -242,7 +264,7 @@ public class BTree {
 	public void inOrderPrint(BTreeNode node) {
 		if (node.isLeaf() == true) {
 			for (int i = 0; i < node.getNumKeys(); i++) {
-				System.out.println(node.getKey(i));
+				System.out.println(convertToDNA(node.getKey(i).getKey()) + ": " + node.getKey(i).getFreq());
 			}
 			return;
 		}
@@ -251,7 +273,34 @@ public class BTree {
 			BTreeNode y = readNode(offset);
 			inOrderPrint(y);
 			if (i < node.getNumKeys())
-				System.out.println(node.getKey(i));
+				System.out.println(convertToDNA(node.getKey(i).getKey()) + ": " + node.getKey(i).getFreq());
+
+		}
+
+	}
+
+	/**
+	 * Prints the keys using an in order traversal.
+	 * 
+	 * @param node
+	 */
+	public void inOrderQueryPrint(BTreeNode node) {
+		if (node.isLeaf() == true) {
+			for (int i = 0; i < node.getNumKeys(); i++) {
+				if (node.getKey(i).getFreq() != 0) {
+					System.out.println(convertToDNA(node.getKey(i).getKey()) + ": " + node.getKey(i).getFreq());
+				}
+			}
+			return;
+		}
+		for (int i = 0; i < node.getNumKeys() + 1; ++i) {
+			int offset = node.getChild(i);
+			BTreeNode y = readNode(offset);
+			inOrderPrint(y);
+			if (i < node.getNumKeys())
+				if (node.getKey(i).getFreq() != 0) {
+					System.out.println(convertToDNA(node.getKey(i).getKey()) + ": " + node.getKey(i).getFreq());
+				}
 
 		}
 
