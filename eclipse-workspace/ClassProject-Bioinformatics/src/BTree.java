@@ -9,7 +9,7 @@ public class BTree {
 	private BTreeNode root;
 	private int currentOffset;
 	private int nodeSize;
-	private int insertPoint;
+	private int insertP;
 	private int seqLength;
 	private File binFile;
 	private RandomAccessFile disk;
@@ -27,7 +27,7 @@ public class BTree {
 		this.seqLength = seqLength;
 		nodeSize = (32 * degree - 3);
 		currentOffset = 12;
-		insertPoint = (currentOffset + nodeSize);
+		insertP = (currentOffset + nodeSize);
 		BTreeNode temp = new BTreeNode();
 		root = temp;
 		root.setOffset(currentOffset);
@@ -99,7 +99,7 @@ public class BTree {
 				BTreeNode n = new BTreeNode();
 				n.setOffset(start.getOffset());
 				root = n;
-				start.setOffset(insertPoint);
+				start.setOffset(insertP);
 				start.setParent(n.getOffset());
 				n.setLeaf(false);
 				n.addChild(start.getOffset());
@@ -192,20 +192,20 @@ public class BTree {
 		start.setNumKeys(start.getNumKeys() + 1);
 		c.setNumKeys(c.getNumKeys() - 1);
 		if (start == root && start.getNumKeys() == 1) {
-			writeNode(c, insertPoint);
-			insertPoint += nodeSize;
-			d.setOffset(insertPoint);
+			writeNode(c, insertP);
+			insertP += nodeSize;
+			d.setOffset(insertP);
 			start.addChild2(d.getOffset(), i + 1);
-			writeNode(d, insertPoint);
+			writeNode(d, insertP);
 			writeNode(start, currentOffset);
-			insertPoint += nodeSize;
+			insertP += nodeSize;
 		} else {
 			writeNode(c, c.getOffset());
-			d.setOffset(insertPoint);
-			writeNode(d, insertPoint);
+			d.setOffset(insertP);
+			writeNode(d, insertP);
 			start.addChild2(d.getOffset(), i + 1);
 			writeNode(start, start.getOffset());
-			insertPoint += nodeSize;
+			insertP += nodeSize;
 		}
 	}
 
