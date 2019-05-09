@@ -6,19 +6,19 @@
  */
 public class TreeObject {
 
-	private int freq;
+	private int frequency;
 	private long key;
 
 	/**
 	 * Constructor for the BTree object.
 	 * 
 	 * @param key  - the key of the object.
-	 * @param freq - the frequency of the object.
+	 * @param frequency - the frequency of the object.
 	 */
 
-	public TreeObject(long key, int freq) {
+	public TreeObject(long key, int frequency) {
 		this.key = key;
-		this.freq = freq;
+		this.frequency = frequency;
 	}
 
 	/**
@@ -29,7 +29,7 @@ public class TreeObject {
 
 	public TreeObject(long key) {
 		this.key = key;
-		this.freq = 1;
+		this.frequency = 1;
 	}
 
 	/**
@@ -47,14 +47,14 @@ public class TreeObject {
 	 * @return
 	 */
 	public int getFreq() {
-		return this.freq;
+		return this.frequency;
 	}
 
 	/**
-	 * Increments the frequency of the BTree object.
+	 * Increments the freqency of the BTree object.
 	 */
 	public void increaseFreq() {
-		freq++;
+		frequency++;
 	}
 
 	/**
